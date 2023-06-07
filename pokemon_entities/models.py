@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.db import models  # noqa F401
 
 
@@ -21,4 +20,3 @@ class PokemonEntity(models.Model):
     Strength = models.IntegerField(null=True)
     Defence = models.IntegerField(null=True)
     Stamina = models.IntegerField(null=True)
-
