@@ -1,5 +1,4 @@
 import folium
-import json
 from .models import Pokemon, PokemonEntity
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
@@ -65,8 +64,13 @@ def show_pokemon(request, pokemon_id):
                 'title_en': requested_pokemon.title_en,
                 'title_jp': requested_pokemon.title_jp,
                 'img_url': requested_pokemon.image.url,
-                'description': requested_pokemon.description
-            }
+                'description': requested_pokemon.description,
+                }
+            if requested_pokemon.parent is not None:
+                pokemon['previous_evolution'] = {
+                    'title_ru': requested_pokemon.parent.title,
+                    'pokemon_id': requested_pokemon.parent.id,
+                    'img_url': requested_pokemon.parent.image.url}
             break
     else:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
