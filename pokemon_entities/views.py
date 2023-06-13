@@ -66,11 +66,11 @@ def show_pokemon(request, pokemon_id):
                 'img_url': requested_pokemon.image.url,
                 'description': requested_pokemon.description,
             }
-            if requested_pokemon.parent is not None:
+            if requested_pokemon.previous_evolution is not None:
                 pokemon['previous_evolution'] = {
-                    'title_ru': requested_pokemon.parent.title,
-                    'pokemon_id': requested_pokemon.parent.id,
-                    'img_url': requested_pokemon.parent.image.url
+                    'title_ru': requested_pokemon.previous_evolution.title,
+                    'pokemon_id': requested_pokemon.previous_evolution.id,
+                    'img_url': requested_pokemon.previous_evolution.image.url
                 }
             if next_evolution_pokemon.exists():
                 next_evolution_pokemon = next_evolution_pokemon[0]

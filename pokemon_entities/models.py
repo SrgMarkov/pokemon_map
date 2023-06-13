@@ -3,16 +3,16 @@ from django.db import models  # noqa F401
 
 class Pokemon(models.Model):
     title = models.CharField(max_length=200, verbose_name='Название (Рус)', null=True)
-    title_en = models.CharField(max_length=200, verbose_name='Название (Англ)', null=True)
-    title_jp = models.CharField(max_length=200, verbose_name='Название (Яп)', null=True)
+    title_en = models.CharField(max_length=200, verbose_name='Название (Англ)', null=True, blank=True)
+    title_jp = models.CharField(max_length=200, verbose_name='Название (Яп)', null=True, blank=True)
     description = models.TextField(verbose_name='Описание', blank=True)
     image = models.ImageField(verbose_name='Изображение', blank=True)
-    parent = models.ForeignKey('self',
-                               verbose_name='Из кого эволюционирует',
-                               null=True,
-                               blank=True,
-                               related_name='next_evolutions',
-                               on_delete=models.SET_NULL)
+    previous_evolution = models.ForeignKey('self',
+                                           verbose_name='Из кого эволюционирует',
+                                           null=True,
+                                           blank=True,
+                                           related_name='next_evolutions',
+                                           on_delete=models.SET_NULL)
 
     def __str__(self):
         return f'{self.title}'
