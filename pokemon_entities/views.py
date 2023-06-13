@@ -55,27 +55,33 @@ def show_pokemon(request, pokemon_id):
     pokemons = Pokemon.objects.all()
     pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=timezone.localtime(),
                                                     disappeared_at__gt=timezone.localtime())
-
     for pokemon in pokemons:
         if pokemon.id == int(pokemon_id):
             requested_pokemon = pokemon
+            next_evolution_pokemon = pokemon.next_evolutions.all()
             pokemon = {
                 'title_ru': requested_pokemon.title,
                 'title_en': requested_pokemon.title_en,
                 'title_jp': requested_pokemon.title_jp,
                 'img_url': requested_pokemon.image.url,
                 'description': requested_pokemon.description,
-                }
+            }
             if requested_pokemon.parent is not None:
                 pokemon['previous_evolution'] = {
                     'title_ru': requested_pokemon.parent.title,
                     'pokemon_id': requested_pokemon.parent.id,
-                    'img_url': requested_pokemon.parent.image.url}
+                    'img_url': requested_pokemon.parent.image.url
+                }
+            if next_evolution_pokemon.exists():
+                next_evolution_pokemon = next_evolution_pokemon[0]
+                pokemon['next_evolution'] = {
+                    'title_ru': next_evolution_pokemon.title,
+                    'pokemon_id': next_evolution_pokemon.id,
+                    'img_url': next_evolution_pokemon.image.url
+                }
             break
     else:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
-
-
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemon_entities.filter(Pokemon=requested_pokemon):
