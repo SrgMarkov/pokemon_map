@@ -20,15 +20,15 @@ class Pokemon(models.Model):
 
 class PokemonEntity(models.Model):
     Pokemon = models.ForeignKey(Pokemon, verbose_name='Покемон', on_delete=models.CASCADE)
-    Lat = models.FloatField()
-    Lon = models.FloatField()
+    Lat = models.FloatField(verbose_name='широта точки появления')
+    Lon = models.FloatField(verbose_name='долгота точки появления')
     appeared_at = models.DateTimeField(verbose_name='Время появления', default='')
     disappeared_at = models.DateTimeField(verbose_name='Время исчезания', default='')
-    Level = models.IntegerField(blank=True, null=True)
-    Health = models.IntegerField(blank=True, null=True)
-    Strength = models.IntegerField(blank=True, null=True)
-    Defence = models.IntegerField(blank=True, null=True)
-    Stamina = models.IntegerField(blank=True, null=True)
+    Level = models.IntegerField(verbose_name='Уровень', blank=True, null=True)
+    Health = models.IntegerField(verbose_name='Здоровье', blank=True, null=True)
+    Strength = models.IntegerField(verbose_name='Сила', blank=True, null=True)
+    Defence = models.IntegerField(verbose_name='Урон', blank=True, null=True)
+    Stamina = models.IntegerField(verbose_name='Выносливость', blank=True, null=True)
 
     def __str__(self):
         return f'{self.Pokemon}'
