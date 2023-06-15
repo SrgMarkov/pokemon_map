@@ -1,6 +1,5 @@
 import folium
 from .models import Pokemon, PokemonEntity
-from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
@@ -33,7 +32,7 @@ def show_all_pokemons(request):
         add_pokemon(
             folium_map, pokemon_entity.lat,
             pokemon_entity.lon,
-            f'media/{pokemon_entity.pokemon.image}'
+            pokemon_entity.pokemon.image.url
         )
 
     pokemons = Pokemon.objects.all()
@@ -81,7 +80,7 @@ def show_pokemon(request, pokemon_id):
         add_pokemon(
             folium_map, pokemon_entity.lat,
             pokemon_entity.lon,
-            f'media/{pokemon_entity.pokemon.image}'
+            pokemon_entity.pokemon.image.url
         )
 
     return render(request, 'pokemon.html', context={
