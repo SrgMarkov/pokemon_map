@@ -1,7 +1,7 @@
 import folium
 from .models import Pokemon, PokemonEntity
 from django.http import HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
 MOSCOW_CENTER = [55.751244, 37.618423]
@@ -52,33 +52,27 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    pokemons = Pokemon.objects.all()
-    for pokemon in pokemons:
-        if pokemon.id == int(pokemon_id):
-            requested_pokemon = pokemon
-            next_evolution_pokemon = pokemon.next_evolutions.first()
-            pokemon = {
-                'title_ru': requested_pokemon.title,
-                'title_en': requested_pokemon.title_en,
-                'title_jp': requested_pokemon.title_jp,
-                'img_url': requested_pokemon.image.url,
-                'description': requested_pokemon.description,
-            }
-            if requested_pokemon.previous_evolution:
-                pokemon['previous_evolution'] = {
-                    'title_ru': requested_pokemon.previous_evolution.title,
-                    'pokemon_id': requested_pokemon.previous_evolution.id,
-                    'img_url': requested_pokemon.previous_evolution.image.url
-                }
-            if next_evolution_pokemon:
-                pokemon['next_evolution'] = {
-                    'title_ru': next_evolution_pokemon.title,
-                    'pokemon_id': next_evolution_pokemon.id,
-                    'img_url': next_evolution_pokemon.image.url
-                }
-            break
-    else:
-        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
+    requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id))
+    next_evolution_pokemon = requested_pokemon.next_evolutions.first()
+    pokemon = {
+        'title_ru': requested_pokemon.title,
+        'title_en': requested_pokemon.title_en,
+        'title_jp': requested_pokemon.title_jp,
+        'img_url': requested_pokemon.image.url,
+        'description': requested_pokemon.description,
+    }
+    if requested_pokemon.previous_evolution:
+        pokemon['previous_evolution'] = {
+            'title_ru': requested_pokemon.previous_evolution.title,
+            'pokemon_id': requested_pokemon.previous_evolution.id,
+            'img_url': requested_pokemon.previous_evolution.image.url
+        }
+    if next_evolution_pokemon:
+        pokemon['next_evolution'] = {
+            'title_ru': next_evolution_pokemon.title,
+            'pokemon_id': next_evolution_pokemon.id,
+            'img_url': next_evolution_pokemon.image.url
+        }
 
     time_fixed = timezone.localtime()
     pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=time_fixed, disappeared_at__gt=time_fixed)
