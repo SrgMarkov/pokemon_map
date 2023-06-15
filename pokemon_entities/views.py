@@ -64,7 +64,7 @@ def show_pokemon(request, pokemon_id):
                 'img_url': requested_pokemon.image.url,
                 'description': requested_pokemon.description,
             }
-            if requested_pokemon.previous_evolution is not None:
+            if requested_pokemon.previous_evolution:
                 pokemon['previous_evolution'] = {
                     'title_ru': requested_pokemon.previous_evolution.title,
                     'pokemon_id': requested_pokemon.previous_evolution.id,
