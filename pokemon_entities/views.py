@@ -26,10 +26,9 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 
 def show_all_pokemons(request):
-    pokemons = Pokemon.objects.all()
+    folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     time_fixed = timezone.localtime()
     pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=time_fixed, disappeared_at__gt=time_fixed)
-    folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemon_entities:
         add_pokemon(
             folium_map, pokemon_entity.lat,
@@ -37,6 +36,7 @@ def show_all_pokemons(request):
             f'media/{pokemon_entity.pokemon.image}'
         )
 
+    pokemons = Pokemon.objects.all()
     pokemons_on_page = []
     for pokemon in pokemons:
         pokemons_on_page.append({
@@ -53,8 +53,6 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     pokemons = Pokemon.objects.all()
-    time_fixed = timezone.localtime()
-    pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=time_fixed, disappeared_at__gt=time_fixed)
     for pokemon in pokemons:
         if pokemon.id == int(pokemon_id):
             requested_pokemon = pokemon
@@ -83,6 +81,8 @@ def show_pokemon(request, pokemon_id):
     else:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
+    time_fixed = timezone.localtime()
+    pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=time_fixed, disappeared_at__gt=time_fixed)
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemon_entities.filter(pokemon=requested_pokemon):
         add_pokemon(
