@@ -52,7 +52,6 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id))
-    next_evolution_pokemon = requested_pokemon.next_evolutions.first()
     pokemon = {
         'title_ru': requested_pokemon.title,
         'title_en': requested_pokemon.title_en,
@@ -66,6 +65,7 @@ def show_pokemon(request, pokemon_id):
             'pokemon_id': requested_pokemon.previous_evolution.id,
             'img_url': requested_pokemon.previous_evolution.image.url
         }
+    next_evolution_pokemon = requested_pokemon.next_evolutions.first()
     if next_evolution_pokemon:
         pokemon['next_evolution'] = {
             'title_ru': next_evolution_pokemon.title,
